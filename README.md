@@ -207,6 +207,111 @@ The Unity layer is strictly observation-only. It cannot mutate machine state, mo
 
 ---
 
+## 🧩 State Regions (Multiple Active States)
+
+Some systems require multiple independent states to be active at the same time.
+
+For example, a player in a shooter might be:
+
+- **Running** (movement)
+- **Crouched** (posture)
+- **Aiming** (weapon)
+
+These are not a single state — they are independent dimensions of behavior.
+
+### ❌ The Wrong Approach
+
+Trying to model this in one FSM leads to state explosion:
+
+```
+RunningCrouchedAiming
+RunningStandingAiming
+WalkingCrouchedHipFire
+...
+```
+
+This quickly becomes unmanageable.
+
+### ✅ The CleanState Approach
+
+CleanState keeps each concern in its own machine:
+
+```
+LocomotionMachine
+PostureMachine
+WeaponMachine
+```
+
+These machines run side-by-side under the same scheduler via `CompositeStateMachine`:
+
+```
+Locomotion: Running
+Posture:    Crouched
+Weapon:     Aiming
+```
+
+> **A single machine models one concern.**
+> **Complex behavior is built by composing multiple machines.**
+
+### ⚙️ Example
+
+```csharp
+var player = new CompositeStateMachine("PlayerState");
+player.AddRegion("Locomotion", locomotionDef);
+player.AddRegion("Posture", postureDef);
+player.AddRegion("Weapon", weaponDef);
+
+// Cross-region constraint: running forces standing
+player.AddConstraint((composite, time) =>
+{
+    if (composite.GetRegionState("Locomotion") == "Running"
+        && composite.GetRegionState("Posture") == "Crouched")
+    {
+        composite.SendEvent("Posture", "Stand", time);
+    }
+});
+
+player.Start(time);
+player.Update(time);
+```
+
+### 🔄 Coordination Between Regions
+
+Regions can coordinate through:
+
+- **Shared context** — each region can read other regions' state via `__region.{name}` context keys
+- **Events** — send targeted or broadcast events (e.g., `ReloadStarted`, `SprintBlocked`)
+- **Constraints** — explicit rules evaluated after each update
+
+### 🔍 Debugging
+
+Each region is fully observable:
+
+- Current state per region
+- Transitions per region
+- Independent breakpoints and trace buffers
+
+This avoids the complexity of debugging a single "mega-state".
+
+### 🧠 When to Use State Regions
+
+**Use multiple machines when:**
+
+- Behaviors are independent but simultaneous
+- You want to avoid combinatorial state explosion
+- Different systems evolve separately
+
+**Use a single machine when:**
+
+- Modeling a linear or branching flow
+- Orchestrating a single feature (UI, gameplay loop, etc.)
+
+State Regions let you scale complexity without losing clarity.
+
+👉 **See the full example:** [`samples/CompositeRegions`](samples/CompositeRegions/README.md)
+
+---
+
 ## 🛠 Debugging & Visualization — First-Class Feature
 
 > *This is why you pick CleanState.*
