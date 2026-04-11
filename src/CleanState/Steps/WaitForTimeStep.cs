@@ -7,36 +7,38 @@ namespace CleanState.Steps
 {
     /// <summary>
     /// Blocks until the specified duration has elapsed from when the step was first reached.
+    /// Stateless — stores the target time in MachineContext so multiple machines can
+    /// safely share the same compiled MachineDefinition.
     /// </summary>
     public sealed class WaitForTimeStep : IStep
     {
         public float Duration { get; }
         public StepDebugInfo DebugInfo { get; }
 
-        private float _targetTime;
-        private bool _initialized;
+        private readonly string _contextKey;
 
         public WaitForTimeStep(float duration, StepDebugInfo debugInfo)
         {
             Duration = duration;
-            DebugInfo = debugInfo;
+            DebugInfo = debugInfo ?? throw new System.ArgumentNullException(nameof(debugInfo));
+            _contextKey = $"__wft_{debugInfo.StateName}_{debugInfo.StepIndex}";
         }
 
         public StepResult Execute(MachineContext context)
         {
-            if (!_initialized)
+            if (!context.TryGet<float>(_contextKey, out var targetTime))
             {
-                _targetTime = context.CurrentTime + Duration;
-                _initialized = true;
+                targetTime = context.CurrentTime + Duration;
+                context.Set(_contextKey, targetTime);
             }
 
-            if (context.CurrentTime >= _targetTime)
+            if (context.CurrentTime >= targetTime)
             {
-                _initialized = false; // reset for potential re-entry
+                context.Remove(_contextKey);
                 return StepResult.Continue();
             }
 
-            return StepResult.WaitForTime(_targetTime);
+            return StepResult.WaitForTime(targetTime);
         }
     }
 }

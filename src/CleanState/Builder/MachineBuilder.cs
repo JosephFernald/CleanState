@@ -18,6 +18,7 @@ namespace CleanState.Builder
     {
         private readonly string _machineName;
         private readonly List<StateBuilder> _stateBuilders = new List<StateBuilder>();
+        private readonly HashSet<string> _stateNames = new HashSet<string>();
         private string _initialStateName;
 
         public MachineBuilder(string machineName)
@@ -32,6 +33,10 @@ namespace CleanState.Builder
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException("State name cannot be null or empty.", nameof(name));
+
+            if (!_stateNames.Add(name))
+                throw new InvalidOperationException(
+                    $"Duplicate state name '{name}' in machine '{_machineName}'. Each state must have a unique name.");
 
             var builder = new StateBuilder(this, name);
             _stateBuilders.Add(builder);
