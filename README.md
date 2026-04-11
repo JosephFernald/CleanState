@@ -14,8 +14,10 @@
   <img src="https://img.shields.io/badge/unity-6000.0%2B-blue.svg"/>
   <img src="https://img.shields.io/badge/core-netstandard2.0-purple.svg"/>
   <img src="https://img.shields.io/badge/tests-69%20passing%20%E2%9C%94-brightgreen.svg"/>
-  <img src="https://img.shields.io/badge/status-active-brightgreen.svg"/>
+  <img src="https://img.shields.io/badge/status-work%20in%20progress-orange.svg"/>
 </p>
+
+> **Note:** This repository is a work in progress and was made public early to support CI/CD infrastructure. APIs, documentation, and samples may change. Not yet ready for production use.
 
 ---
 
