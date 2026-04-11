@@ -10,3 +10,5 @@
   href: task-orchestration.md
 - name: Parallel Sidecar
   href: parallel-sidecar.md
+- name: Composite Regions
+  href: composite-regions.md

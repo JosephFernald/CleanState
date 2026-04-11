@@ -486,6 +486,25 @@ Shows scheduler power and non-blocking parallel orchestration — no shared bool
 
 ---
 
+### 🧩 Composite State Regions (Orthogonal Composition)
+
+Three orthogonal state machines modeling a player character — no combinatorial explosion.
+
+**Demonstrates:**
+
+- `CompositeStateMachine` coordinating independent regions
+- Aggregate state tuple: `{ Locomotion: Running, Posture: Crouched, Weapon: Aiming }`
+- Cross-region constraints (running forces standing posture)
+- 8 total states instead of 18+ in a monolithic FSM
+
+**Why it matters:**
+
+Monolithic FSMs multiply states for every new concern. Orthogonal regions add a machine, not a multiplicative explosion.
+
+👉 **See:** [`samples/CompositeRegions`](samples/CompositeRegions/README.md)
+
+---
+
 ### ▶ Running the Samples
 
 ```bash
@@ -497,6 +516,7 @@ dotnet run --project samples/UIFlow/UIFlow.csproj
 dotnet run --project samples/RecoveryDemo/RecoveryDemo.csproj
 dotnet run --project samples/TaskOrchestration/TaskOrchestration.csproj
 dotnet run --project samples/ParallelSidecar/ParallelSidecar.csproj
+dotnet run --project samples/CompositeRegions/CompositeRegions.csproj
 ```
 
 Each sample highlights a specific problem CleanState solves.
