@@ -1,0 +1,12 @@
+{
+  "name": "com.cleanstate.unity",
+  "version": "1.0.0",
+  "displayName": "CleanState FSM Visual Debugger",
+  "description": "Unity visual debugger for the CleanState FSM framework. Provides a real-time GraphView inspector for state machines.",
+  "unity": "6000.0",
+  "dependencies": {},
+  "keywords": ["fsm", "state-machine", "debugger", "graph"],
+  "author": {
+    "name": "CleanState"
+  }
+}

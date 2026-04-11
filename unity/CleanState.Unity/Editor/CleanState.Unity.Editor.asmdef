@@ -1,0 +1,19 @@
+{
+  "name": "CleanState.Unity.Editor",
+  "rootNamespace": "CleanState.Unity.Editor",
+  "references": [
+    "CleanState.Unity.Runtime"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": true,
+  "precompiledReferences": [
+    "CleanState.dll"
+  ],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "noEngineReferences": false
+}

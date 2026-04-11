@@ -1,0 +1,35 @@
+/* Grid background */
+GridBackground {
+    --grid-background-color: #1a1a1a;
+    --line-color: rgba(255, 255, 255, 0.04);
+    --thick-line-color: rgba(255, 255, 255, 0.08);
+    --spacing: 20;
+}
+
+/* State nodes */
+.node {
+    min-width: 180px;
+    background-color: #2a2a2a;
+    border-radius: 6px;
+}
+
+.node #title {
+    background-color: #333333;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    font-size: 13px;
+}
+
+/* Ports */
+.port {
+    --port-color: #888888;
+}
+
+/* Edge styling */
+.edge {
+    --edge-width: 2;
+}
+
+.edge:hover {
+    --edge-color: #ffffff;
+}
