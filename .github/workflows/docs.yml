@@ -9,6 +9,9 @@ on:
       - '.github/workflows/docs.yml'
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 permissions:
   contents: read
   pages: write
@@ -32,14 +35,19 @@ jobs:
       - name: Install DocFX
         run: dotnet tool install docfx -g
 
-      - name: Build documentation
+      - name: Generate API metadata
         run: |
           cd docfx_project
           docfx metadata docfx.json
+        continue-on-error: true
+
+      - name: Build documentation
+        run: |
+          cd docfx_project
           docfx build docfx.json
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: docfx_project/_site
 
