@@ -380,6 +380,88 @@ dotnet test tests/CleanState.Tests/CleanState.Tests.csproj
 
 ---
 
+## 🎮 Samples
+
+CleanState includes runnable samples demonstrating real-world orchestration problems — not just simple state transitions.
+
+---
+
+### 🎰 PickGame (Flagship Example)
+
+A slot-style pick game flow with looping and branching behavior.
+
+**Demonstrates:**
+
+- Repeated state loops (`AwaitPick → Reveal → decision → repeat`)
+- Event-driven progression (`PlayerPicked`)
+- Timed waits (`RevealPause`, `SummaryPause`)
+- Checkpoints and recovery-friendly boundaries
+- Transition tracing, timeline playback, and breakpoints
+
+**Why it matters:**
+
+Most FSMs break down under looping + branching complexity.
+CleanState keeps the entire flow explicit and debuggable.
+
+👉 **Start here:** [`samples/PickGame`](samples/PickGame)
+
+---
+
+### 🖥 UI Flow Orchestration
+
+A structured multi-step onboarding flow replacing coroutine-driven logic.
+
+**Demonstrates:**
+
+- Sequential state orchestration
+- Waiting on user input and async events
+- Conditional branching (permissions granted vs. skipped)
+- Clean replacement for coroutine-based flows
+- No `Update()` loops or boolean flags
+
+**Why it matters:**
+
+Replaces fragile UI logic with a deterministic execution model.
+
+👉 **See:** [`samples/UIFlow`](samples/UIFlow)
+
+---
+
+### 🔄 Recovery / Resume Demo
+
+Simulates interruption and restoration of an active state machine.
+
+**Demonstrates:**
+
+- Snapshot capture with domain data
+- JSON serialization of machine state
+- Recovery to logical checkpoints
+- Deterministic resume behavior after complete machine destruction
+
+**Why it matters:**
+
+Most FSM systems cannot recover safely — CleanState is built for it.
+
+👉 **See:** [`samples/RecoveryDemo`](samples/RecoveryDemo)
+
+---
+
+### ▶ Running the Samples
+
+```bash
+git clone https://github.com/JosephFernald/CleanState
+cd CleanState
+
+dotnet run --project samples/PickGame/PickGame.csproj
+dotnet run --project samples/UIFlow/UIFlow.csproj
+dotnet run --project samples/RecoveryDemo/RecoveryDemo.csproj
+```
+
+Each sample highlights a specific problem CleanState solves.
+**If you're new, start with PickGame.**
+
+---
+
 ## 📈 Roadmap
 
 - [ ] WaitForAll / WaitForAny composite blocks
