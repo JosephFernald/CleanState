@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParallelSidecar", "samples\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompositeRegions", "samples\CompositeRegions\CompositeRegions.csproj", "{A25FAE34-E82E-4A49-AF2B-B349F5FCFF94}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateRegionsPlayer", "samples\StateRegionsPlayer\StateRegionsPlayer.csproj", "{B2A2FA4D-42F4-4E41-BE8E-415C4908488A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -129,6 +131,18 @@ Global
 		{A25FAE34-E82E-4A49-AF2B-B349F5FCFF94}.Release|x64.Build.0 = Release|Any CPU
 		{A25FAE34-E82E-4A49-AF2B-B349F5FCFF94}.Release|x86.ActiveCfg = Release|Any CPU
 		{A25FAE34-E82E-4A49-AF2B-B349F5FCFF94}.Release|x86.Build.0 = Release|Any CPU
+		{B2A2FA4D-42F4-4E41-BE8E-415C4908488A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2A2FA4D-42F4-4E41-BE8E-415C4908488A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2A2FA4D-42F4-4E41-BE8E-415C4908488A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B2A2FA4D-42F4-4E41-BE8E-415C4908488A}.Debug|x64.Build.0 = Debug|Any CPU
+		{B2A2FA4D-42F4-4E41-BE8E-415C4908488A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B2A2FA4D-42F4-4E41-BE8E-415C4908488A}.Debug|x86.Build.0 = Debug|Any CPU
+		{B2A2FA4D-42F4-4E41-BE8E-415C4908488A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2A2FA4D-42F4-4E41-BE8E-415C4908488A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2A2FA4D-42F4-4E41-BE8E-415C4908488A}.Release|x64.ActiveCfg = Release|Any CPU
+		{B2A2FA4D-42F4-4E41-BE8E-415C4908488A}.Release|x64.Build.0 = Release|Any CPU
+		{B2A2FA4D-42F4-4E41-BE8E-415C4908488A}.Release|x86.ActiveCfg = Release|Any CPU
+		{B2A2FA4D-42F4-4E41-BE8E-415C4908488A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,5 +154,6 @@ Global
 		{9EFA0110-F5B1-4273-B33B-42340CCD1778} = {5D20AA90-6969-D8BD-9DCD-8634F4692FDA}
 		{66F932AC-4F45-49D0-99D5-9A8F6EBEC4D2} = {5D20AA90-6969-D8BD-9DCD-8634F4692FDA}
 		{A25FAE34-E82E-4A49-AF2B-B349F5FCFF94} = {5D20AA90-6969-D8BD-9DCD-8634F4692FDA}
+		{B2A2FA4D-42F4-4E41-BE8E-415C4908488A} = {5D20AA90-6969-D8BD-9DCD-8634F4692FDA}
 	EndGlobalSection
 EndGlobal
