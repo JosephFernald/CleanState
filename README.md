@@ -405,7 +405,7 @@ A slot-style pick game flow with looping and branching behavior.
 Most FSMs break down under looping + branching complexity.
 CleanState keeps the entire flow explicit and debuggable.
 
-👉 **Start here:** [`samples/PickGame`](samples/PickGame)
+👉 **Start here:** [`samples/PickGame`](samples/PickGame/README.md)
 
 ---
 
@@ -425,7 +425,7 @@ A structured multi-step onboarding flow replacing coroutine-driven logic.
 
 Replaces fragile UI logic with a deterministic execution model.
 
-👉 **See:** [`samples/UIFlow`](samples/UIFlow)
+👉 **See:** [`samples/UIFlow`](samples/UIFlow/README.md)
 
 ---
 
@@ -444,7 +444,7 @@ Simulates interruption and restoration of an active state machine.
 
 Most FSM systems cannot recover safely — CleanState is built for it.
 
-👉 **See:** [`samples/RecoveryDemo`](samples/RecoveryDemo)
+👉 **See:** [`samples/RecoveryDemo`](samples/RecoveryDemo/README.md)
 
 ---
 
@@ -463,7 +463,7 @@ A document processing pipeline proving CleanState works beyond games.
 
 Proves this isn't just for Unity — it's a general orchestration engine.
 
-👉 **See:** [`samples/TaskOrchestration`](samples/TaskOrchestration)
+👉 **See:** [`samples/TaskOrchestration`](samples/TaskOrchestration/README.md)
 
 ---
 
@@ -482,7 +482,7 @@ Three machines running concurrently on a shared scheduler.
 
 Shows scheduler power and non-blocking parallel orchestration — no shared booleans, no coupled Update loops.
 
-👉 **See:** [`samples/ParallelSidecar`](samples/ParallelSidecar)
+👉 **See:** [`samples/ParallelSidecar`](samples/ParallelSidecar/README.md)
 
 ---
 
