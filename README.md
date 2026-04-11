@@ -610,6 +610,28 @@ Monolithic FSMs multiply states for every new concern. Orthogonal regions add a 
 
 ---
 
+### 🎮 State Regions Player (Composed Regions)
+
+Simultaneous locomotion, posture, and weapon state without state explosion.
+
+**Demonstrates:**
+
+- Three composed regions modeling one player (10 states instead of 36+)
+- Cross-region constraints enforced by the coordinator layer:
+  - Sprinting cancels aiming
+  - Reloading blocks aiming
+  - Going prone cancels sprint
+- Aggregate state tuple after every input
+- Per-region transition tracing
+
+**Why it matters:**
+
+Proves CleanState can model simultaneous concerns by composing machines, not by building mega-states. Adding a fourth concern adds states, not multiplies them.
+
+👉 **See:** [`samples/StateRegionsPlayer`](samples/StateRegionsPlayer/README.md)
+
+---
+
 ### ▶ Running the Samples
 
 ```bash
@@ -622,10 +644,11 @@ dotnet run --project samples/RecoveryDemo/RecoveryDemo.csproj
 dotnet run --project samples/TaskOrchestration/TaskOrchestration.csproj
 dotnet run --project samples/ParallelSidecar/ParallelSidecar.csproj
 dotnet run --project samples/CompositeRegions/CompositeRegions.csproj
+dotnet run --project samples/StateRegionsPlayer/StateRegionsPlayer.csproj
 ```
 
 Each sample highlights a specific problem CleanState solves.
-**If you're new, start with PickGame.**
+**If you're new, start with PickGame. For composed regions, see StateRegionsPlayer.**
 
 ---
 

@@ -2,6 +2,8 @@
 
 A single machine is best for one concern. Some systems have multiple simultaneous concerns. This sample composes three machines to model one player without state explosion.
 
+> **When to use state regions:** Use this pattern when behaviors are simultaneous but independent, such as movement, posture, and weapon handling.
+
 ## Why Not One Machine?
 
 A player can be Running, Crouched, and Aiming — all at the same time. A single FSM must represent every combination as a discrete state:
@@ -43,6 +45,7 @@ The aggregate player state is the tuple of all three:
   - Sprinting cancels aiming (weapon forced to HipFire)
   - Reloading blocks aiming (weapon locked until done)
   - Going prone cancels sprint (locomotion forced to Walking)
+  - Cross-region constraints are enforced by the coordinator layer, not by merging regions into one machine
 - **Aggregate debug view** — full state tuple printed after every action
 - **Per-region transition tracing** — each region has independent history
 - **Timed state** — Reloading runs for 2 seconds, then auto-returns to HipFire
