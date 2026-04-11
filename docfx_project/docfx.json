@@ -23,6 +23,9 @@
       },
       {
         "files": [ "articles/**.md", "articles/**/toc.yml", "toc.yml", "*.md" ]
+      },
+      {
+        "files": [ "samples/**.md", "samples/**/toc.yml" ]
       }
     ],
     "resource": [
