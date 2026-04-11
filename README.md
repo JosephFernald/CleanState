@@ -448,6 +448,44 @@ Most FSM systems cannot recover safely — CleanState is built for it.
 
 ---
 
+### ⚙️ Task Orchestration (Non-Game)
+
+A document processing pipeline proving CleanState works beyond games.
+
+**Demonstrates:**
+
+- Input validation with pass/fail branching
+- External service calls with retry logic (3 attempts, backoff delays)
+- Timeout handling and dead letter queue
+- Full pipeline traceability across every phase and retry
+
+**Why it matters:**
+
+Proves this isn't just for Unity — it's a general orchestration engine.
+
+👉 **See:** [`samples/TaskOrchestration`](samples/TaskOrchestration)
+
+---
+
+### 🔀 Parallel / Sidecar Behavior (Advanced)
+
+Three machines running concurrently on a shared scheduler.
+
+**Demonstrates:**
+
+- Main flow with independent sidecar machines (hints + watchdog)
+- Cross-machine event communication
+- Independent trace buffers per machine
+- Watchdog timeout forcing the main flow to end
+
+**Why it matters:**
+
+Shows scheduler power and non-blocking parallel orchestration — no shared booleans, no coupled Update loops.
+
+👉 **See:** [`samples/ParallelSidecar`](samples/ParallelSidecar)
+
+---
+
 ### ▶ Running the Samples
 
 ```bash
@@ -457,6 +495,8 @@ cd CleanState
 dotnet run --project samples/PickGame/PickGame.csproj
 dotnet run --project samples/UIFlow/UIFlow.csproj
 dotnet run --project samples/RecoveryDemo/RecoveryDemo.csproj
+dotnet run --project samples/TaskOrchestration/TaskOrchestration.csproj
+dotnet run --project samples/ParallelSidecar/ParallelSidecar.csproj
 ```
 
 Each sample highlights a specific problem CleanState solves.

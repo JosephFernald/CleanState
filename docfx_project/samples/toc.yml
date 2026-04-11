@@ -6,3 +6,7 @@
   href: ui-flow.md
 - name: Recovery Demo
   href: recovery-demo.md
+- name: Task Orchestration
+  href: task-orchestration.md
+- name: Parallel Sidecar
+  href: parallel-sidecar.md
