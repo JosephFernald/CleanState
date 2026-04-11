@@ -35,15 +35,10 @@ jobs:
       - name: Install DocFX
         run: dotnet tool install docfx -g
 
-      - name: Generate API metadata
-        run: |
-          cd docfx_project
-          docfx metadata docfx.json
-        continue-on-error: true
-
       - name: Build documentation
         run: |
           cd docfx_project
+          docfx metadata docfx.json
           docfx build docfx.json
 
       - name: Upload artifact
