@@ -12,8 +12,7 @@
       "disableGitFeatures": false,
       "disableDefaultFilter": false,
       "properties": {
-        "TargetFramework": "netstandard2.0",
-        "Nullable": "disable"
+        "TargetFramework": "netstandard2.0"
       }
     }
   ],
