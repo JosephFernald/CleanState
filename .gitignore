@@ -30,5 +30,10 @@ MemoryCaptures/
 *.csproj.meta
 *.sln.meta
 
+# DocFX build output
+docfx_project/_site/
+docfx_project/api/*.yml
+docfx_project/api/.manifest
+
 # Claude
 .claude/

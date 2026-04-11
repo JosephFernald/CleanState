@@ -1,0 +1,36 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="borderGradient" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#D633B0"/>
+      <stop offset="100%" stop-color="#3AC3F2"/>
+    </linearGradient>
+    
+    <linearGradient id="topCircle" x1="256" y1="100" x2="256" y2="180" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#8E44AD"/>
+      <stop offset="100%" stop-color="#6C3483"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="20" y="20" width="472" height="472" rx="80" fill="#1A1A21" />
+  
+  <rect x="25" y="25" width="462" height="462" rx="75" stroke="url(#borderGradient)" stroke-width="8" fill="none" />
+
+  <circle cx="256" cy="135" r="45" fill="#8E52E9" />
+  <circle cx="256" cy="377" r="45" fill="#8E52E9" />
+  <circle cx="135" cy="256" r="45" fill="#D633B0" />
+  <circle cx="377" cy="256" r="45" fill="#3AC3F2" />
+
+  <g stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M305 135 C350 135 377 160 377 200" stroke="#3AC3F2" fill="none" />
+    <path d="M370 190 L377 205 L384 190" stroke="#3AC3F2" fill="none" />
+    
+    <path d="M377 312 C377 352 350 377 310 377" stroke="#3AC3F2" fill="none" />
+    <path d="M320 370 L305 377 L320 384" stroke="#3AC3F2" fill="none" />
+    
+    <path d="M207 377 C165 377 135 352 135 312" stroke="#D633B0" fill="none" />
+    <path d="M128 322 L135 307 L142 322" stroke="#D633B0" fill="none" />
+    
+    <path d="M135 200 C135 160 162 135 202 135" stroke="#D633B0" fill="none" />
+    <path d="M192 128 L207 135 L192 142" stroke="#D633B0" fill="none" />
+  </g>
+</svg>
