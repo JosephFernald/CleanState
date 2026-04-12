@@ -694,6 +694,19 @@ CleanState is built for:
 
 ---
 
+## 🙏 Inspired By
+
+CleanState was inspired by the ideas and approaches in these projects:
+
+- [**Stateless**](https://github.com/dotnet-state-machine/stateless) — lightweight state machine library for .NET with fluent configuration
+- [**Unity-FSM**](https://github.com/thefuntastic/Unity3d-Finite-State-Machine) — simple finite state machine for Unity
+- [**Appccelerate.StateMachine**](https://github.com/appccelerate/statemachine) — hierarchical state machine with async support
+- [**Boost.MSM**](https://www.boost.org/doc/libs/release/libs/msm/) — Meta State Machine from Boost, a high-performance C++ FSM library
+
+CleanState takes a different path — run-until-blocked execution, first-class debugging, checkpoint-based recovery, and orthogonal state composition — but these projects helped shape the thinking behind it.
+
+---
+
 ## 📄 License
 
 MIT License — free for commercial and non-commercial use.
