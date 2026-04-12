@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/CleanStateGitHubBanner.jpg" alt="CleanState Banner" />
+  <img src="docfx_project/images/CleanStateGitHubBanner.jpg" alt="CleanState Banner" />
 </p>
 
 <h1 align="center">CleanState</h1>
