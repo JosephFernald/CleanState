@@ -70,7 +70,7 @@ namespace CleanState.Runtime
         /// Main update loop. Call once per frame with the current time.
         /// Delivers queued events, then ticks blocked machines.
         /// </summary>
-        public void Update(float currentTime)
+        public void Update(double currentTime)
         {
             // 1. Deliver queued events
             var events = _eventQueue.FlushAndSwap();

@@ -26,7 +26,7 @@ namespace CleanState.Debug
         public string Detail { get; }
 
         /// <summary>Time at which the transition occurred.</summary>
-        public float Timestamp { get; }
+        public double Timestamp { get; }
 
         /// <summary>Creates a transition trace with full provenance information.</summary>
         public TransitionTrace(
@@ -35,7 +35,7 @@ namespace CleanState.Debug
             int triggerStepIndex,
             TransitionReasonKind reason,
             string detail,
-            float timestamp)
+            double timestamp)
         {
             FromState = fromState;
             ToState = toState;

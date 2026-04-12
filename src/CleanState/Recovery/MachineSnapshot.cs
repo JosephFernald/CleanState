@@ -62,7 +62,7 @@ namespace CleanState.Recovery
         /// Restore a machine from a snapshot. Restores domain data to context,
         /// then forces the machine into the checkpoint state.
         /// </summary>
-        public static void RestoreFromSnapshot(Runtime.Machine machine, MachineSnapshot snapshot, float currentTime)
+        public static void RestoreFromSnapshot(Runtime.Machine machine, MachineSnapshot snapshot, double currentTime)
         {
             // Restore domain data
             foreach (var kvp in snapshot.DomainData)

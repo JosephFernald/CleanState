@@ -79,7 +79,7 @@ namespace CleanState.Builder
         /// Add a step that blocks for the specified duration in seconds.
         /// </summary>
         public StateBuilder WaitForTime(
-            float duration,
+            double duration,
             string label = null,
             [CallerFilePath] string file = null,
             [CallerLineNumber] int line = 0)
@@ -161,7 +161,7 @@ namespace CleanState.Builder
             public readonly Func<MachineContext, bool> Predicate;
             public readonly string EventName;
             public readonly string TargetState;
-            public readonly float Duration;
+            public readonly double Duration;
             public readonly string SourceFile;
             public readonly int SourceLine;
 
@@ -173,7 +173,7 @@ namespace CleanState.Builder
                 int sourceLine = 0,
                 string eventName = null,
                 string targetState = null,
-                float duration = 0f,
+                double duration = 0.0,
                 Func<MachineContext, bool> predicate = null)
             {
                 Kind = kind;

@@ -13,14 +13,14 @@ namespace CleanState.Steps
     public sealed class WaitForTimeStep : IStep
     {
         /// <summary>The duration in seconds this step waits.</summary>
-        public float Duration { get; }
+        public double Duration { get; }
         /// <inheritdoc />
         public StepDebugInfo DebugInfo { get; }
 
         private readonly string _contextKey;
 
         /// <summary>Creates a new WaitForTimeStep that blocks for the specified duration.</summary>
-        public WaitForTimeStep(float duration, StepDebugInfo debugInfo)
+        public WaitForTimeStep(double duration, StepDebugInfo debugInfo)
         {
             Duration = duration;
             DebugInfo = debugInfo ?? throw new System.ArgumentNullException(nameof(debugInfo));
@@ -30,7 +30,7 @@ namespace CleanState.Steps
         /// <inheritdoc />
         public StepResult Execute(MachineContext context)
         {
-            if (!context.TryGet<float>(_contextKey, out var targetTime))
+            if (!context.TryGet<double>(_contextKey, out var targetTime))
             {
                 targetTime = context.CurrentTime + Duration;
                 context.Set(_contextKey, targetTime);

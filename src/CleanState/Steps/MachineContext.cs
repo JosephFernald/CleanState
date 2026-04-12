@@ -12,7 +12,7 @@ namespace CleanState.Steps
     public sealed class MachineContext
     {
         /// <summary>The current time as provided by the machine's time source.</summary>
-        public float CurrentTime { get; internal set; }
+        public double CurrentTime { get; internal set; }
         /// <summary>The most recently received event, or EventId.Invalid if none.</summary>
         public EventId LastReceivedEvent { get; internal set; } = EventId.Invalid;
         /// <summary>The state the machine is currently in.</summary>

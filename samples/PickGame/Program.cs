@@ -285,7 +285,7 @@ class Program
         Console.ResetColor();
     }
 
-    static void PrintTrace(string from, string to, TransitionReasonKind reason, string detail, float time)
+    static void PrintTrace(string from, string to, TransitionReasonKind reason, string detail, double time)
     {
         Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine($"  ── {from} → {to} | {reason}: {detail} | t={time:F1}s");

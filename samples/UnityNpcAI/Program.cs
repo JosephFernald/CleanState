@@ -57,17 +57,17 @@
 //       {
 //           _scheduler = new Scheduler();
 //           _machine = _scheduler.CreateMachine(BuildAIDefinition());
-//           _machine.Start(Time.time);
+//           _machine.Start(Time.timeAsDouble);
 //       }
 //
 //       void Update()
 //       {
-//           _scheduler.Update(Time.time);
+//           _scheduler.Update(Time.timeAsDouble);
 //       }
 //
 //       // Send events from game systems:
 //       public void OnPlayerSpotted() =>
-//           _machine.SendEvent(playerSpottedId, Time.time);
+//           _machine.SendEvent(playerSpottedId, Time.timeAsDouble);
 //   }
 //
 // =============================================================================
@@ -83,7 +83,7 @@ namespace CleanState.Samples.UnityNpcAI;
 /// <summary>
 /// Demonstrates a 6-state NPC AI (Patrol, Alert, Chase, Attack, Search, Dead)
 /// using CleanState, simulating a Unity game loop. The same MachineDefinition
-/// runs unchanged in Unity 6 with Scheduler.Update(Time.time).
+/// runs unchanged in Unity 6 with Scheduler.Update(Time.timeAsDouble).
 /// </summary>
 class Program
 {
@@ -110,7 +110,7 @@ class Program
         Console.WriteLine("║                                                     ║");
         Console.WriteLine("║  States: Patrol, Alert, Chase, Attack, Search, Dead ║");
         Console.WriteLine("║                                                     ║");
-        Console.WriteLine("║  Simulates a Unity game loop with Time.time,        ║");
+        Console.WriteLine("║  Simulates a Unity game loop with Time.timeAsDouble,        ║");
         Console.WriteLine("║  raycasts, and distance checks replaced by          ║");
         Console.WriteLine("║  scripted events.                                   ║");
         Console.WriteLine("╚══════════════════════════════════════════════════════╝");
@@ -252,7 +252,7 @@ class Program
 
         // ── Set up scheduler and tracing ──
         // In Unity, the Scheduler lives on a MonoBehaviour and Update() calls
-        // scheduler.Update(Time.time). The TraceBuffer is optional — attach it
+        // scheduler.Update(Time.timeAsDouble). The TraceBuffer is optional — attach it
         // when you want transition history for debugging.
 
         var traceBuffer = new TraceBuffer(64);
@@ -273,7 +273,7 @@ class Program
         // ══════════════════════════════════════════════════════
 
         Print("ENGINE", "Starting NPC AI (simulating Unity game loop)...");
-        Print("ENGINE", "In Unity: Scheduler.Update(Time.time) in MonoBehaviour.Update()");
+        Print("ENGINE", "In Unity: Scheduler.Update(Time.timeAsDouble) in MonoBehaviour.Update()");
         Console.WriteLine(new string('─', 60));
 
         float time = 0f;
@@ -374,9 +374,9 @@ class Program
         Console.WriteLine();
         Print("UNITY", "In Unity, this exact definition runs with:");
         Print("UNITY", "  var machine = scheduler.CreateMachine(definition);");
-        Print("UNITY", "  machine.Start(Time.time);");
-        Print("UNITY", "  // In Update(): scheduler.Update(Time.time);");
-        Print("UNITY", "  // Send events from triggers: machine.SendEvent(id, Time.time);");
+        Print("UNITY", "  machine.Start(Time.timeAsDouble);");
+        Print("UNITY", "  // In Update(): scheduler.Update(Time.timeAsDouble);");
+        Print("UNITY", "  // Send events from triggers: machine.SendEvent(id, Time.timeAsDouble);");
         Print("UNITY", "No switch statements. No Update() spaghetti. Full traceability.");
     }
 

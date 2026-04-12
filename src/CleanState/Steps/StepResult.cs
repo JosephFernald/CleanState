@@ -46,9 +46,9 @@ namespace CleanState.Steps
         /// <summary>The event to wait for when blocking on an event.</summary>
         public readonly EventId WaitEventId;
         /// <summary>The target time to wait until when blocking on time.</summary>
-        public readonly float WaitUntilTime;
+        public readonly double WaitUntilTime;
 
-        private StepResult(StepResultKind kind, StateId targetState, BlockKind blockKind, EventId waitEventId, float waitUntilTime)
+        private StepResult(StepResultKind kind, StateId targetState, BlockKind blockKind, EventId waitEventId, double waitUntilTime)
         {
             Kind = kind;
             TargetState = targetState;
@@ -67,7 +67,7 @@ namespace CleanState.Steps
         public static StepResult WaitForEvent(EventId eventId) => new StepResult(StepResultKind.Block, StateId.Invalid, BlockKind.WaitForEvent, eventId, 0f);
 
         /// <summary>Creates a result that blocks until the specified time is reached.</summary>
-        public static StepResult WaitForTime(float untilTime) => new StepResult(StepResultKind.Block, StateId.Invalid, BlockKind.WaitForTime, EventId.Invalid, untilTime);
+        public static StepResult WaitForTime(double untilTime) => new StepResult(StepResultKind.Block, StateId.Invalid, BlockKind.WaitForTime, EventId.Invalid, untilTime);
 
         /// <summary>Creates a result that blocks until a predicate becomes true.</summary>
         public static StepResult WaitForPredicate() => new StepResult(StepResultKind.Block, StateId.Invalid, BlockKind.WaitForPredicate, EventId.Invalid, 0f);

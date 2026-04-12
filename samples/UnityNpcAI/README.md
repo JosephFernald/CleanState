@@ -2,7 +2,7 @@
 
 An enemy guard NPC with patrol, alert, chase, attack, search, and death states — the classic Unity AI pattern rebuilt with CleanState.
 
-> This runs as a console app simulating Unity's game loop. The same machine definition works unchanged in Unity 6 with `Scheduler.Update(Time.time)` in a MonoBehaviour.
+> This runs as a console app simulating Unity's game loop. The same machine definition works unchanged in Unity 6 with `Scheduler.Update(Time.timeAsDouble)` in a MonoBehaviour.
 
 ## What This Demonstrates
 
@@ -64,17 +64,17 @@ public class EnemyController : MonoBehaviour
     {
         _scheduler = new Scheduler();
         _machine = _scheduler.CreateMachine(BuildAIDefinition());
-        _machine.Start(Time.time);
+        _machine.Start(Time.timeAsDouble);
     }
 
     void Update()
     {
-        _scheduler.Update(Time.time);
+        _scheduler.Update(Time.timeAsDouble);
     }
 
     // Send events from game systems (triggers, raycasts, etc.):
     public void OnPlayerSpotted() =>
-        _machine.SendEvent(playerSpottedId, Time.time);
+        _machine.SendEvent(playerSpottedId, Time.timeAsDouble);
 }
 ```
 

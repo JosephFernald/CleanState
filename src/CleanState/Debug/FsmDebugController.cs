@@ -131,7 +131,7 @@ namespace CleanState.Debug
         }
 
         /// <summary>Executes the pending debug command, if any. Returns true if a command was applied.</summary>
-        public bool ApplyPendingCommand(float currentTime)
+        public bool ApplyPendingCommand(double currentTime)
         {
             if (_pendingCommand.Kind == DebugCommandKind.None)
                 return false;

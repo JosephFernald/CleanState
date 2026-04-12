@@ -65,16 +65,16 @@ public class EnemyController : MonoBehaviour
     {
         _scheduler = new Scheduler();
         _machine = _scheduler.CreateMachine(BuildAIDefinition());
-        _machine.Start(Time.time);
+        _machine.Start(Time.timeAsDouble);
     }
 
     void Update()
     {
-        _scheduler.Update(Time.time);
+        _scheduler.Update(Time.timeAsDouble);
     }
 
     public void OnPlayerSpotted() =>
-        _machine.SendEvent(playerSpottedId, Time.time);
+        _machine.SendEvent(playerSpottedId, Time.timeAsDouble);
 }
 ```
 

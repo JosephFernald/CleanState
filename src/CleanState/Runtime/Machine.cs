@@ -22,7 +22,7 @@ namespace CleanState.Runtime
         private int _currentStepIndex;
         private BlockKind _blockKind;
         private EventId _waitingForEvent;
-        private float _waitUntilTime;
+        private double _waitUntilTime;
         private TransitionTrace _lastTransition;
 
         /// <summary>Unique identifier for this machine instance.</summary>
@@ -70,7 +70,7 @@ namespace CleanState.Runtime
         /// <summary>
         /// Start the machine at its initial state.
         /// </summary>
-        public void Start(float currentTime)
+        public void Start(double currentTime)
         {
             if (Status != MachineStatus.Idle)
                 throw new InvalidOperationException($"Cannot start machine '{_definition.Name}' — status is {Status}.");
@@ -84,7 +84,7 @@ namespace CleanState.Runtime
         /// <summary>
         /// Send an event to this machine. If it's waiting for this event, it will unblock and continue.
         /// </summary>
-        public void SendEvent(EventId eventId, float currentTime)
+        public void SendEvent(EventId eventId, double currentTime)
         {
             if (Status == MachineStatus.Completed || Status == MachineStatus.Faulted)
                 return;
@@ -102,7 +102,7 @@ namespace CleanState.Runtime
         /// Tick the machine. Checks time-based and predicate-based blocks.
         /// Called by the scheduler each frame.
         /// </summary>
-        public void Update(float currentTime)
+        public void Update(double currentTime)
         {
             if (Status != MachineStatus.Blocked)
                 return;
@@ -133,7 +133,7 @@ namespace CleanState.Runtime
         /// <summary>
         /// Force the machine into a specific state. Used for recovery and external commands.
         /// </summary>
-        public void ForceState(StateId stateId, float currentTime, int stepIndex = 0)
+        public void ForceState(StateId stateId, double currentTime, int stepIndex = 0)
         {
             _context.CurrentTime = currentTime;
             EnterState(stateId, currentTime, stepIndex);
@@ -181,7 +181,7 @@ namespace CleanState.Runtime
                 stepCount);
         }
 
-        private void RunUntilBlocked(float currentTime)
+        private void RunUntilBlocked(double currentTime)
         {
             int safetyLimit = 10000;
 
@@ -251,17 +251,17 @@ namespace CleanState.Runtime
             }
         }
 
-        private void EnterState(StateId stateId, float currentTime, int stepIndex = 0)
+        private void EnterState(StateId stateId, double currentTime, int stepIndex = 0)
         {
             _currentStateDef = _definition.GetState(stateId);
             _currentStepIndex = stepIndex;
             _context.CurrentState = stateId;
             _blockKind = BlockKind.None;
             _waitingForEvent = EventId.Invalid;
-            _waitUntilTime = 0f;
+            _waitUntilTime = 0.0;
         }
 
-        private void RecordTransition(StateId from, StateId to, int stepIndex, TransitionReasonKind reason, string detail, float timestamp)
+        private void RecordTransition(StateId from, StateId to, int stepIndex, TransitionReasonKind reason, string detail, double timestamp)
         {
             var trace = new TransitionTrace(from, to, stepIndex, reason, detail, timestamp);
             _lastTransition = trace;

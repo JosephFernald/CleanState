@@ -41,7 +41,7 @@ namespace CleanState.Debug
         public string WaitingForEventName { get; }
 
         /// <summary>Time the machine is waiting until, if blocked on a timer.</summary>
-        public float WaitUntilTime { get; }
+        public double WaitUntilTime { get; }
 
         /// <summary>Label of the current step.</summary>
         public string CurrentStepLabel { get; }
@@ -63,7 +63,7 @@ namespace CleanState.Debug
             TransitionTrace lastTransition,
             EventId waitingForEvent,
             string waitingForEventName,
-            float waitUntilTime,
+            double waitUntilTime,
             string currentStepLabel,
             string currentStepType,
             int stepCountInCurrentState)

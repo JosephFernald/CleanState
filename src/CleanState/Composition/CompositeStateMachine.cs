@@ -35,7 +35,7 @@ namespace CleanState.Composition
         private readonly Scheduler _scheduler;
         private readonly List<RegionEntry> _regions = new List<RegionEntry>();
         private readonly Dictionary<string, RegionEntry> _regionsByName = new Dictionary<string, RegionEntry>();
-        private readonly List<Action<CompositeStateMachine, float>> _constraints = new List<Action<CompositeStateMachine, float>>();
+        private readonly List<Action<CompositeStateMachine, double>> _constraints = new List<Action<CompositeStateMachine, double>>();
         private bool _started;
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace CleanState.Composition
         /// Use this for cross-region rules (e.g., "cannot aim while reloading").
         /// The callback receives this composite and the current time.
         /// </summary>
-        public void AddConstraint(Action<CompositeStateMachine, float> constraint)
+        public void AddConstraint(Action<CompositeStateMachine, double> constraint)
         {
             _constraints.Add(constraint ?? throw new ArgumentNullException(nameof(constraint)));
         }
@@ -131,7 +131,7 @@ namespace CleanState.Composition
         /// <summary>
         /// Start all regions.
         /// </summary>
-        public void Start(float currentTime)
+        public void Start(double currentTime)
         {
             if (_started)
                 throw new InvalidOperationException($"Composite '{_name}' has already been started.");
@@ -152,7 +152,7 @@ namespace CleanState.Composition
         /// Tick all regions. After the scheduler update, syncs cross-region state
         /// and evaluates constraints.
         /// </summary>
-        public void Update(float currentTime)
+        public void Update(double currentTime)
         {
             _scheduler.Update(currentTime);
             SyncRegionStates();
@@ -162,7 +162,7 @@ namespace CleanState.Composition
         /// <summary>
         /// Send an event to a specific region by name.
         /// </summary>
-        public void SendEvent(string regionName, EventId eventId, float currentTime)
+        public void SendEvent(string regionName, EventId eventId, double currentTime)
         {
             var entry = GetRegionEntry(regionName);
             entry.Machine.SendEvent(eventId, currentTime);
@@ -172,7 +172,7 @@ namespace CleanState.Composition
         /// <summary>
         /// Send an event to a specific region by name, looking up the event by string.
         /// </summary>
-        public void SendEvent(string regionName, string eventName, float currentTime)
+        public void SendEvent(string regionName, string eventName, double currentTime)
         {
             var entry = GetRegionEntry(regionName);
             var eventId = MachineBuilder.EventIdFrom(entry.Definition, eventName);
@@ -183,7 +183,7 @@ namespace CleanState.Composition
         /// <summary>
         /// Broadcast an event to all regions. Each region ignores events it doesn't recognize.
         /// </summary>
-        public void BroadcastEvent(string eventName, float currentTime)
+        public void BroadcastEvent(string eventName, double currentTime)
         {
             for (int i = 0; i < _regions.Count; i++)
             {
@@ -294,7 +294,7 @@ namespace CleanState.Composition
             }
         }
 
-        private void EvaluateConstraints(float currentTime)
+        private void EvaluateConstraints(double currentTime)
         {
             for (int i = 0; i < _constraints.Count; i++)
             {

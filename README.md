@@ -651,7 +651,7 @@ A 6-state enemy guard demonstrating how CleanState replaces the typical `switch`
 
 **Why it matters:**
 
-Every Unity dev has written the `switch (currentState)` AI loop. CleanState replaces it with a named, traceable pipeline that runs unchanged in Unity 6 with `Scheduler.Update(Time.time)`.
+Every Unity dev has written the `switch (currentState)` AI loop. CleanState replaces it with a named, traceable pipeline that runs unchanged in Unity 6 with `Scheduler.Update(Time.timeAsDouble)`.
 
 👉 **See:** [`samples/UnityNpcAI`](samples/UnityNpcAI/README.md)
 
