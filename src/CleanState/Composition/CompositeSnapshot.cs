@@ -13,11 +13,16 @@ namespace CleanState.Composition
     /// </summary>
     public sealed class RegionState
     {
+        /// <summary>Name of the region.</summary>
         public string RegionName { get; }
+        /// <summary>Current state name within this region.</summary>
         public string StateName { get; }
+        /// <summary>Current execution status of the region's machine.</summary>
         public MachineStatus Status { get; }
+        /// <summary>The kind of block keeping the region's machine from progressing, if any.</summary>
         public BlockKind BlockReason { get; }
 
+        /// <summary>Creates a new region state snapshot.</summary>
         public RegionState(string regionName, string stateName, MachineStatus status, BlockKind blockReason)
         {
             RegionName = regionName;
@@ -35,10 +40,12 @@ namespace CleanState.Composition
     /// </summary>
     public sealed class CompositeSnapshot
     {
+        /// <summary>Name of the composite machine this snapshot was taken from.</summary>
         public string Name { get; }
 
         private readonly Dictionary<string, RegionState> _regions;
 
+        /// <summary>Creates a new composite snapshot with the given region states.</summary>
         public CompositeSnapshot(string name, Dictionary<string, RegionState> regions)
         {
             Name = name;

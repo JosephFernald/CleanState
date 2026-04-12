@@ -10,8 +10,10 @@ namespace CleanState.Debug
     /// </summary>
     public sealed class FsmExecutionException : Exception
     {
+        /// <summary>Debug metadata for the step that threw the exception.</summary>
         public StepDebugInfo StepInfo { get; }
 
+        /// <summary>Creates an execution exception wrapping the inner exception with step context.</summary>
         public FsmExecutionException(StepDebugInfo stepInfo, Exception innerException)
             : base($"FSM execution failed at {stepInfo}", innerException)
         {

@@ -13,14 +13,17 @@ namespace CleanState.Steps
     {
         private readonly Action<MachineContext> _action;
 
+        /// <inheritdoc />
         public StepDebugInfo DebugInfo { get; }
 
+        /// <summary>Creates a new ActionStep that runs the specified action.</summary>
         public ActionStep(Action<MachineContext> action, StepDebugInfo debugInfo)
         {
             _action = action ?? throw new ArgumentNullException(nameof(action));
             DebugInfo = debugInfo ?? throw new ArgumentNullException(nameof(debugInfo));
         }
 
+        /// <inheritdoc />
         public StepResult Execute(MachineContext context)
         {
             _action(context);

@@ -3,6 +3,7 @@
 
 namespace CleanState.Runtime
 {
+    /// <summary>Lifecycle status of a state machine instance.</summary>
     public enum MachineStatus
     {
         /// <summary>Machine has not started yet.</summary>

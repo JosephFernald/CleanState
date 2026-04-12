@@ -12,11 +12,14 @@ namespace CleanState.Steps
     /// </summary>
     public sealed class WaitForTimeStep : IStep
     {
+        /// <summary>The duration in seconds this step waits.</summary>
         public float Duration { get; }
+        /// <inheritdoc />
         public StepDebugInfo DebugInfo { get; }
 
         private readonly string _contextKey;
 
+        /// <summary>Creates a new WaitForTimeStep that blocks for the specified duration.</summary>
         public WaitForTimeStep(float duration, StepDebugInfo debugInfo)
         {
             Duration = duration;
@@ -24,6 +27,7 @@ namespace CleanState.Steps
             _contextKey = $"__wft_{debugInfo.StateName}_{debugInfo.StepIndex}";
         }
 
+        /// <inheritdoc />
         public StepResult Execute(MachineContext context)
         {
             if (!context.TryGet<float>(_contextKey, out var targetTime))

@@ -14,14 +14,17 @@ namespace CleanState.Steps
     {
         private readonly Func<MachineContext, bool> _predicate;
 
+        /// <inheritdoc />
         public StepDebugInfo DebugInfo { get; }
 
+        /// <summary>Creates a new WaitForPredicateStep that blocks until the predicate returns true.</summary>
         public WaitForPredicateStep(Func<MachineContext, bool> predicate, StepDebugInfo debugInfo)
         {
             _predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
             DebugInfo = debugInfo ?? throw new ArgumentNullException(nameof(debugInfo));
         }
 
+        /// <inheritdoc />
         public StepResult Execute(MachineContext context)
         {
             if (_predicate(context))

@@ -11,15 +11,19 @@ namespace CleanState.Steps
     /// </summary>
     public sealed class TransitionStep : IStep
     {
+        /// <summary>The state to transition to.</summary>
         public StateId TargetState { get; }
+        /// <inheritdoc />
         public StepDebugInfo DebugInfo { get; }
 
+        /// <summary>Creates a new TransitionStep targeting the specified state.</summary>
         public TransitionStep(StateId targetState, StepDebugInfo debugInfo)
         {
             TargetState = targetState;
             DebugInfo = debugInfo;
         }
 
+        /// <inheritdoc />
         public StepResult Execute(MachineContext context)
         {
             return StepResult.Transition(TargetState);

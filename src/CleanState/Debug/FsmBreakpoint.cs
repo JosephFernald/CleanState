@@ -11,6 +11,7 @@ namespace CleanState.Debug
     /// </summary>
     public sealed class FsmBreakpoint
     {
+        /// <summary>The kind of condition this breakpoint checks.</summary>
         public FsmBreakpointKind Kind { get; }
 
         /// <summary>State to break on (for StateEntry/StateStep kinds).</summary>
@@ -78,10 +79,16 @@ namespace CleanState.Debug
         }
     }
 
+    /// <summary>Kinds of breakpoint conditions supported by the debug controller.</summary>
     public enum FsmBreakpointKind
     {
+        /// <summary>Break when a specific state is entered.</summary>
         StateEntry,
+
+        /// <summary>Break when a specific step index is reached in a state.</summary>
         StateStep,
+
+        /// <summary>Break when a transition occurs for a given reason.</summary>
         TransitionReason
     }
 }

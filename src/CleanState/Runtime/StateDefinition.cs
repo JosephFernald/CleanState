@@ -12,11 +12,16 @@ namespace CleanState.Runtime
     /// </summary>
     public sealed class StateDefinition
     {
+        /// <summary>Unique identifier for this state.</summary>
         public StateId Id { get; }
+        /// <summary>Human-readable name of this state.</summary>
         public string Name { get; }
+        /// <summary>Ordered array of steps executed when the machine enters this state.</summary>
         public IStep[] Steps { get; }
+        /// <summary>Whether this state is a recovery checkpoint.</summary>
         public bool IsCheckpoint { get; }
 
+        /// <summary>Creates a new state definition with the given steps and metadata.</summary>
         public StateDefinition(StateId id, string name, IStep[] steps, bool isCheckpoint)
         {
             Id = id;

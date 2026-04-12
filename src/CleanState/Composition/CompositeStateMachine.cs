@@ -85,12 +85,14 @@ namespace CleanState.Composition
             }
         }
 
+        /// <summary>Creates a composite machine with a new default scheduler.</summary>
         public CompositeStateMachine(string name)
         {
             _name = name ?? throw new ArgumentNullException(nameof(name));
             _scheduler = new Scheduler();
         }
 
+        /// <summary>Creates a composite machine using the specified shared scheduler.</summary>
         public CompositeStateMachine(string name, Scheduler scheduler)
         {
             _name = name ?? throw new ArgumentNullException(nameof(name));

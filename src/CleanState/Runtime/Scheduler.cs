@@ -19,11 +19,15 @@ namespace CleanState.Runtime
         private readonly EventQueue _eventQueue;
         private int _nextMachineId;
 
+        /// <summary>The event queue used to enqueue and deliver events.</summary>
         public EventQueue Events => _eventQueue;
+        /// <summary>Number of machines currently registered with this scheduler.</summary>
         public int MachineCount => _machines.Count;
 
+        /// <summary>Creates a scheduler with a new default event queue.</summary>
         public Scheduler() : this(new EventQueue()) { }
 
+        /// <summary>Creates a scheduler with the specified event queue.</summary>
         public Scheduler(EventQueue eventQueue)
         {
             _eventQueue = eventQueue ?? throw new ArgumentNullException(nameof(eventQueue));
@@ -55,6 +59,7 @@ namespace CleanState.Runtime
             return false;
         }
 
+        /// <summary>Gets the machine with the given identifier, or null if not found.</summary>
         public Machine GetMachine(MachineId id)
         {
             _machineById.TryGetValue(id.Value, out var machine);

@@ -13,14 +13,19 @@ namespace CleanState.Debug
         private int _head;
         private int _count;
 
+        /// <summary>Creates a trace buffer with the specified capacity.</summary>
         public TraceBuffer(int capacity = 128)
         {
             _buffer = new TransitionTrace[capacity];
         }
 
+        /// <summary>Number of traces currently stored.</summary>
         public int Count => _count;
+
+        /// <summary>Maximum number of traces this buffer can hold.</summary>
         public int Capacity => _buffer.Length;
 
+        /// <summary>Records a transition trace, overwriting the oldest entry if full.</summary>
         public void Record(TransitionTrace trace)
         {
             _buffer[_head] = trace;
@@ -49,6 +54,7 @@ namespace CleanState.Debug
             return result;
         }
 
+        /// <summary>Removes all recorded traces.</summary>
         public void Clear()
         {
             _head = 0;

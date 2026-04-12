@@ -11,7 +11,9 @@ namespace CleanState.Runtime
     /// </summary>
     public readonly struct QueuedEvent
     {
+        /// <summary>The event to deliver.</summary>
         public readonly EventId EventId;
+        /// <summary>Target machine, or <see cref="MachineId.Invalid"/> for broadcast.</summary>
         public readonly MachineId TargetMachine;
 
         /// <summary>
@@ -35,13 +37,16 @@ namespace CleanState.Runtime
         private List<QueuedEvent> _pending = new List<QueuedEvent>();
         private List<QueuedEvent> _delivering = new List<QueuedEvent>();
 
+        /// <summary>Number of events waiting to be delivered.</summary>
         public int PendingCount => _pending.Count;
 
+        /// <summary>Enqueues a broadcast event for delivery next frame.</summary>
         public void Enqueue(EventId eventId)
         {
             _pending.Add(new QueuedEvent(eventId));
         }
 
+        /// <summary>Enqueues a targeted event for delivery next frame.</summary>
         public void Enqueue(EventId eventId, MachineId target)
         {
             _pending.Add(new QueuedEvent(eventId, target));

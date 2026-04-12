@@ -12,13 +12,17 @@ namespace CleanState.Runtime
     /// </summary>
     public sealed class MachineDefinition
     {
+        /// <summary>Human-readable name of this machine definition.</summary>
         public string Name { get; }
+        /// <summary>The state the machine enters on start.</summary>
         public StateId InitialState { get; }
+        /// <summary>Lookup table mapping identifiers to human-readable names.</summary>
         public NameLookup NameLookup { get; }
 
         private readonly StateDefinition[] _states;
         private readonly Dictionary<int, int> _stateIndexById;
 
+        /// <summary>Creates a new immutable machine definition from the given states.</summary>
         public MachineDefinition(string name, StateDefinition[] states, StateId initialState, NameLookup nameLookup)
         {
             Name = name;
@@ -33,8 +37,10 @@ namespace CleanState.Runtime
             }
         }
 
+        /// <summary>Total number of states in this definition.</summary>
         public int StateCount => _states.Length;
 
+        /// <summary>Gets the state definition for the given identifier, or throws if not found.</summary>
         public StateDefinition GetState(StateId id)
         {
             if (_stateIndexById.TryGetValue(id.Value, out int index))
@@ -42,6 +48,7 @@ namespace CleanState.Runtime
             throw new System.ArgumentException($"State {id} not found in machine '{Name}'.");
         }
 
+        /// <summary>Tries to get the state definition for the given identifier.</summary>
         public bool TryGetState(StateId id, out StateDefinition state)
         {
             if (_stateIndexById.TryGetValue(id.Value, out int index))
@@ -53,6 +60,7 @@ namespace CleanState.Runtime
             return false;
         }
 
+        /// <summary>Gets the state definition at the given array index.</summary>
         public StateDefinition GetStateByIndex(int index) => _states[index];
     }
 }

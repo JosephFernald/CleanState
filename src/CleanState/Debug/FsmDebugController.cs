@@ -31,12 +31,22 @@ namespace CleanState.Debug
         private bool _breakpointHit;
         private FsmBreakpoint _lastHitBreakpoint;
 
+        /// <summary>Whether the machine is currently paused.</summary>
         public bool IsPaused => _paused;
+
+        /// <summary>Whether a debug command is queued for execution.</summary>
         public bool HasPendingCommand => _pendingCommand.Kind != DebugCommandKind.None;
+
+        /// <summary>Whether the pause was caused by hitting a breakpoint.</summary>
         public bool BreakpointHit => _breakpointHit;
+
+        /// <summary>The breakpoint that caused the most recent pause, if any.</summary>
         public FsmBreakpoint LastHitBreakpoint => _lastHitBreakpoint;
+
+        /// <summary>Number of registered breakpoints.</summary>
         public int BreakpointCount => _breakpoints.Count;
 
+        /// <summary>Creates a debug controller and wires it into the specified machine.</summary>
         public FsmDebugController(Machine machine)
         {
             _machine = machine ?? throw new ArgumentNullException(nameof(machine));
@@ -50,11 +60,13 @@ namespace CleanState.Debug
 
         // --- Pause / Resume ---
 
+        /// <summary>Pauses the machine before the next step.</summary>
         public void Pause()
         {
             _paused = true;
         }
 
+        /// <summary>Resumes normal execution and clears breakpoint-hit state.</summary>
         public void Resume()
         {
             _paused = false;
@@ -64,6 +76,7 @@ namespace CleanState.Debug
 
         // --- Step / Jump (require paused) ---
 
+        /// <summary>Queues a single-step command. Machine must be paused.</summary>
         public void StepOnce()
         {
             if (!_paused)
@@ -72,6 +85,7 @@ namespace CleanState.Debug
             _pendingCommand = new DebugCommand(DebugCommandKind.StepOnce);
         }
 
+        /// <summary>Queues a jump to the specified state. Machine must be paused.</summary>
         public void JumpToState(StateId stateId)
         {
             if (!_paused)
@@ -82,6 +96,7 @@ namespace CleanState.Debug
 
         // --- Breakpoints ---
 
+        /// <summary>Registers a breakpoint and returns it.</summary>
         public FsmBreakpoint AddBreakpoint(FsmBreakpoint breakpoint)
         {
             if (breakpoint == null) throw new ArgumentNullException(nameof(breakpoint));
@@ -89,20 +104,24 @@ namespace CleanState.Debug
             return breakpoint;
         }
 
+        /// <summary>Removes the specified breakpoint. Returns true if found.</summary>
         public bool RemoveBreakpoint(FsmBreakpoint breakpoint)
         {
             return _breakpoints.Remove(breakpoint);
         }
 
+        /// <summary>Removes all registered breakpoints.</summary>
         public void ClearBreakpoints()
         {
             _breakpoints.Clear();
         }
 
+        /// <summary>Returns the breakpoint at the specified index.</summary>
         public FsmBreakpoint GetBreakpoint(int index) => _breakpoints[index];
 
         // --- Scheduler integration ---
 
+        /// <summary>Returns true if the machine should execute its next update.</summary>
         public bool ShouldExecute()
         {
             if (!_paused)
@@ -111,6 +130,7 @@ namespace CleanState.Debug
             return _pendingCommand.Kind != DebugCommandKind.None;
         }
 
+        /// <summary>Executes the pending debug command, if any. Returns true if a command was applied.</summary>
         public bool ApplyPendingCommand(float currentTime)
         {
             if (_pendingCommand.Kind == DebugCommandKind.None)

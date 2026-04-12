@@ -12,15 +12,19 @@ namespace CleanState.Steps
     /// </summary>
     public sealed class WaitForEventStep : IStep
     {
+        /// <summary>The event this step is waiting for.</summary>
         public EventId EventId { get; }
+        /// <inheritdoc />
         public StepDebugInfo DebugInfo { get; }
 
+        /// <summary>Creates a new WaitForEventStep that blocks until the specified event is received.</summary>
         public WaitForEventStep(EventId eventId, StepDebugInfo debugInfo)
         {
             EventId = eventId;
             DebugInfo = debugInfo;
         }
 
+        /// <inheritdoc />
         public StepResult Execute(MachineContext context)
         {
             if (context.LastReceivedEvent == EventId)

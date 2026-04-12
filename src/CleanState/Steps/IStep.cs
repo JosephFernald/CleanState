@@ -10,7 +10,9 @@ namespace CleanState.Steps
     /// </summary>
     public interface IStep
     {
+        /// <summary>Debug metadata describing this step's origin.</summary>
         StepDebugInfo DebugInfo { get; }
+        /// <summary>Executes this step and returns the result indicating what the machine should do next.</summary>
         StepResult Execute(MachineContext context);
     }
 }

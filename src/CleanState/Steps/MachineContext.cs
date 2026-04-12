@@ -11,8 +11,11 @@ namespace CleanState.Steps
     /// </summary>
     public sealed class MachineContext
     {
+        /// <summary>The current time as provided by the machine's time source.</summary>
         public float CurrentTime { get; internal set; }
+        /// <summary>The most recently received event, or EventId.Invalid if none.</summary>
         public EventId LastReceivedEvent { get; internal set; } = EventId.Invalid;
+        /// <summary>The state the machine is currently in.</summary>
         public StateId CurrentState { get; internal set; }
 
         /// <summary>
@@ -22,16 +25,19 @@ namespace CleanState.Steps
         private readonly System.Collections.Generic.Dictionary<string, object> _data
             = new System.Collections.Generic.Dictionary<string, object>();
 
+        /// <summary>Stores a value in the shared data store under the specified key.</summary>
         public void Set<T>(string key, T value)
         {
             _data[key] = value;
         }
 
+        /// <summary>Retrieves a value by key, throwing if not found.</summary>
         public T Get<T>(string key)
         {
             return (T)_data[key];
         }
 
+        /// <summary>Attempts to retrieve a value by key, returning false if not found.</summary>
         public bool TryGet<T>(string key, out T value)
         {
             if (_data.TryGetValue(key, out var obj))
@@ -43,10 +49,13 @@ namespace CleanState.Steps
             return false;
         }
 
+        /// <summary>Returns true if the data store contains the specified key.</summary>
         public bool Has(string key) => _data.ContainsKey(key);
 
+        /// <summary>Removes the entry with the specified key from the data store.</summary>
         public void Remove(string key) => _data.Remove(key);
 
+        /// <summary>Removes all entries from the data store.</summary>
         public void ClearData() => _data.Clear();
     }
 }

@@ -25,12 +25,19 @@ namespace CleanState.Runtime
         private float _waitUntilTime;
         private TransitionTrace _lastTransition;
 
+        /// <summary>Unique identifier for this machine instance.</summary>
         public MachineId Id { get; }
+        /// <summary>Current execution status of the machine.</summary>
         public MachineStatus Status { get; private set; }
+        /// <summary>The compiled definition this machine executes.</summary>
         public MachineDefinition Definition => _definition;
+        /// <summary>Shared key-value context available to all steps.</summary>
         public MachineContext Context => _context;
+        /// <summary>The state currently being executed, or <see cref="StateId.Invalid"/> if none.</summary>
         public StateId CurrentState => _currentStateDef != null ? _currentStateDef.Id : StateId.Invalid;
+        /// <summary>Index of the current step within the active state.</summary>
         public int CurrentStepIndex => _currentStepIndex;
+        /// <summary>The kind of block keeping the machine from progressing, if any.</summary>
         public BlockKind BlockReason => _blockKind;
 
         /// <summary>
@@ -50,6 +57,7 @@ namespace CleanState.Runtime
         /// </summary>
         public Func<StateId, int, StepDebugInfo, bool> BeforeStep;
 
+        /// <summary>Creates a new machine instance from the given definition.</summary>
         public Machine(MachineId id, MachineDefinition definition, TraceBuffer traceBuffer = null)
         {
             Id = id;
@@ -133,6 +141,7 @@ namespace CleanState.Runtime
             RunUntilBlocked(currentTime);
         }
 
+        /// <summary>Captures the current machine state as an immutable debug snapshot.</summary>
         public DebugSnapshot GetDebugSnapshot()
         {
             // Resolve current step info
