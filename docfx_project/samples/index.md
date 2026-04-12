@@ -14,6 +14,7 @@ dotnet run --project samples/RecoveryDemo/RecoveryDemo.csproj
 dotnet run --project samples/TaskOrchestration/TaskOrchestration.csproj
 dotnet run --project samples/ParallelSidecar/ParallelSidecar.csproj
 dotnet run --project samples/CompositeRegions/CompositeRegions.csproj
+dotnet run --project samples/UnityNpcAI/UnityNpcAI.csproj
 ```
 
 ## Sample Overview
@@ -26,6 +27,7 @@ dotnet run --project samples/CompositeRegions/CompositeRegions.csproj
 | [Task Orchestration](task-orchestration.md) | Backend workflow with retries | Validation, service calls, retry with backoff, timeout |
 | [Parallel Sidecar](parallel-sidecar.md) | Multiple concurrent machines | Scheduler power, sidecar machines, cross-machine events |
 | [Composite Regions](composite-regions.md) | Orthogonal state composition | CompositeStateMachine, cross-region constraints, aggregate state |
+| [Unity NPC AI](unity-npc-ai.md) | Unity integration pattern | Enemy guard AI, MonoBehaviour wiring, game loop simulation |
 
 ## What to Look For
 

@@ -80,13 +80,26 @@ using CleanState.Steps;
 
 namespace CleanState.Samples.UnityNpcAI;
 
+/// <summary>
+/// Demonstrates a 6-state NPC AI (Patrol, Alert, Chase, Attack, Search, Dead)
+/// using CleanState, simulating a Unity game loop. The same MachineDefinition
+/// runs unchanged in Unity 6 with Scheduler.Update(Time.time).
+/// </summary>
 class Program
 {
-    // Simulated world state (in Unity these would be real transforms/raycasts)
+    // ── Simulated world state ──
+    // In Unity, these would be real transforms, raycasts, and Physics.OverlapSphere.
+    // Here they're mutated by a scripted timeline to drive the NPC through its behaviors.
+
+    /// <summary>Distance from the NPC to the player in meters.</summary>
     static float _playerDistance = 20f;
+    /// <summary>Whether the NPC currently has line-of-sight to the player.</summary>
     static bool _playerVisible = false;
+    /// <summary>NPC health. When this reaches 0, the NPC transitions to Dead.</summary>
     static float _npcHealth = 100f;
+    /// <summary>Current waypoint index in the patrol route.</summary>
     static int _waypointIndex = 0;
+    /// <summary>Named patrol waypoints the NPC cycles through.</summary>
     static readonly string[] Waypoints = { "Gate", "Tower", "Bridge", "Courtyard" };
 
     static void Main()
@@ -108,7 +121,10 @@ class Program
         var definition = new MachineBuilder("EnemyGuard")
 
             // ── PATROL ──
-            // Walk between waypoints. Check for player each waypoint.
+            // Walk between waypoints on a 2-second timer. After each waypoint,
+            // check if the player is visible and within 15m. If so, transition
+            // to Alert. Otherwise, loop back and walk to the next waypoint.
+            // Marked as a checkpoint for recovery.
             .State("Patrol")
                 .Checkpoint()
                 .TransitionIn(ctx =>
@@ -129,7 +145,10 @@ class Program
                     .Otherwise("Patrol", "ContinuePatrol")
 
             // ── ALERT ──
-            // Heard/saw something. Pause, raise weapon, confirm threat.
+            // NPC spotted something suspicious. Raises weapon and pauses for
+            // 1.5 seconds to assess the threat. If the player is confirmed
+            // visible within 12m, transitions to Chase. If the player
+            // disappears, returns to Patrol (false alarm).
             .State("Alert")
                 .TransitionIn(ctx =>
                 {
@@ -147,8 +166,10 @@ class Program
                     .Otherwise("Alert", "StillAssessing")
 
             // ── CHASE ──
-            // Pursue the player. Re-evaluate every 0.5s.
-            // Transition to Attack when in range, Search if lost.
+            // Actively pursuing the player. Re-evaluates every 0.5 seconds
+            // (using WaitForTime, not per-frame polling). Transitions to:
+            //   Attack — if player is within 3m (melee range)
+            //   Search — if line-of-sight is lost or player exceeds 25m
             .State("Chase")
                 .TransitionIn(ctx =>
                 {
@@ -167,7 +188,12 @@ class Program
                     .Otherwise("Chase", "StillChasing")
 
             // ── ATTACK ──
-            // In range. Strike, then re-evaluate.
+            // In melee range. Deals damage, then waits 1 second (attack
+            // cooldown). After cooldown, re-evaluates:
+            //   Dead     — if NPC health has been reduced to 0
+            //   Attack   — if player is still within 3m
+            //   Chase    — if player retreated but is still visible
+            //   Search   — if player disappeared after the attack
             .State("Attack")
                 .TransitionIn(ctx =>
                 {
@@ -187,7 +213,10 @@ class Program
                     .Otherwise("Search", "LostAfterAttack")
 
             // ── SEARCH ──
-            // Lost the player. Look around, then return to patrol.
+            // Lost line-of-sight to the player. Looks left (1.5s) then
+            // right (1.5s). If the player reappears within 15m during
+            // the search, transitions back to Chase. Otherwise, gives
+            // up and returns to Patrol.
             .State("Search")
                 .TransitionIn(ctx =>
                 {
@@ -209,7 +238,8 @@ class Program
                     .Otherwise("Patrol", "GaveUp")
 
             // ── DEAD ──
-            // Terminal state. NPC is down.
+            // Terminal state. NPC has been eliminated. Logs survival time.
+            // Machine completes here (no outgoing transitions).
             .State("Dead")
                 .TransitionIn(ctx =>
                 {
@@ -221,6 +251,9 @@ class Program
             .Build();
 
         // ── Set up scheduler and tracing ──
+        // In Unity, the Scheduler lives on a MonoBehaviour and Update() calls
+        // scheduler.Update(Time.time). The TraceBuffer is optional — attach it
+        // when you want transition history for debugging.
 
         var traceBuffer = new TraceBuffer(64);
         var scheduler = new Scheduler();
@@ -246,7 +279,10 @@ class Program
         float time = 0f;
         machine.Start(time);
 
-        // Script: a sequence of world events that drive the NPC
+        // Script: a sequence of world events that drive the NPC.
+        // In Unity, these would come from physics triggers, raycasts, and
+        // game systems — not a predefined array. Here we simulate them
+        // at specific times to demonstrate the full NPC lifecycle.
         var worldEvents = new (float atTime, string description, Action action)[]
         {
             // NPC patrols peacefully for a bit

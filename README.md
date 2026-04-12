@@ -635,6 +635,28 @@ Proves CleanState can model simultaneous concerns by composing machines, not by 
 
 ---
 
+### 🎯 Unity NPC AI (Enemy Guard)
+
+A 6-state enemy guard demonstrating how CleanState replaces the typical `switch`-in-`Update()` AI pattern.
+
+**Demonstrates:**
+
+- Patrol → Alert → Chase → Attack → Search → Dead lifecycle
+- Waypoint patrol with timed movement
+- Alert phase with threat assessment before committing to chase
+- Distance-based and visibility-based transitions
+- Attack cooldown with post-strike re-evaluation
+- Search behavior when player is lost, then return to patrol
+- Unity MonoBehaviour integration pattern
+
+**Why it matters:**
+
+Every Unity dev has written the `switch (currentState)` AI loop. CleanState replaces it with a named, traceable pipeline that runs unchanged in Unity 6 with `Scheduler.Update(Time.time)`.
+
+👉 **See:** [`samples/UnityNpcAI`](samples/UnityNpcAI/README.md)
+
+---
+
 ### ▶ Running the Samples
 
 ```bash
@@ -648,10 +670,11 @@ dotnet run --project samples/TaskOrchestration/TaskOrchestration.csproj
 dotnet run --project samples/ParallelSidecar/ParallelSidecar.csproj
 dotnet run --project samples/CompositeRegions/CompositeRegions.csproj
 dotnet run --project samples/StateRegionsPlayer/StateRegionsPlayer.csproj
+dotnet run --project samples/UnityNpcAI/UnityNpcAI.csproj
 ```
 
 Each sample highlights a specific problem CleanState solves.
-**If you're new, start with PickGame. For composed regions, see StateRegionsPlayer.**
+**If you're new, start with PickGame. For Unity integration, see UnityNpcAI. For composed regions, see StateRegionsPlayer.**
 
 ---
 
