@@ -680,10 +680,10 @@ Each sample highlights a specific problem CleanState solves.
 
 ## 📈 Roadmap
 
+- [x] Snapshot serialization helpers (`SnapshotSerializer` with JSON round-trip support)
+- [x] Parallel machine execution model (`CompositeStateMachine`, sidecar pattern)
 - [ ] WaitForAll / WaitForAny composite blocks
 - [ ] Child / sub-state machines
-- [ ] Parallel machine execution model
-- [ ] Snapshot serialization helpers
 - [ ] Advanced debug inspector UI
 - [ ] Data-oriented runtime optimization
 

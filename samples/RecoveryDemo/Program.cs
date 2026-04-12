@@ -35,9 +35,6 @@
 // =============================================================================
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
 using CleanState.Builder;
 using CleanState.Debug;
 using CleanState.Recovery;
@@ -143,7 +140,7 @@ class Program
         // ── Serialize the snapshot (simulating persistence) ──
 
         Print("PERSIST", "Serializing snapshot to JSON...", ConsoleColor.DarkCyan);
-        var json = JsonSerializer.Serialize(snapshot, new JsonSerializerOptions { WriteIndented = true });
+        var json = SnapshotSerializer.ToJson(snapshot);
         Print("PERSIST", $"Snapshot size: {json.Length} bytes", ConsoleColor.DarkCyan);
         Console.ForegroundColor = ConsoleColor.DarkGray;
         Console.WriteLine(json);
@@ -159,9 +156,8 @@ class Program
         Print("PHASE 2", "Loading snapshot from persistence...", ConsoleColor.Cyan);
         Console.WriteLine(new string('─', 60));
 
-        // Deserialize and fix up types (System.Text.Json deserializes object values as JsonElement)
-        var restoredSnapshot = JsonSerializer.Deserialize<MachineSnapshot>(json);
-        FixupSnapshotTypes(restoredSnapshot);
+        // Deserialize — SnapshotSerializer handles the JsonElement → CLR type conversion
+        var restoredSnapshot = SnapshotSerializer.FromJson(json);
 
         // Create a BRAND NEW scheduler and machine — as if the app just restarted
         var newTraceBuffer = new TraceBuffer(64);
@@ -243,36 +239,6 @@ class Program
             Console.WriteLine($"{from} → {to}  ({t.Reason}: {t.Detail})");
         }
         Console.WriteLine(new string('═', 60));
-    }
-
-    /// <summary>
-    /// Convert JsonElement values back to their proper CLR types after deserialization.
-    /// This is necessary because System.Text.Json deserializes Dictionary&lt;string, object&gt;
-    /// values as JsonElement rather than their original types.
-    /// In a real app, you'd use a custom JsonConverter or a typed snapshot class.
-    /// </summary>
-    static void FixupSnapshotTypes(MachineSnapshot snapshot)
-    {
-        var fixedData = new Dictionary<string, object>();
-        foreach (var kvp in snapshot.DomainData)
-        {
-            if (kvp.Value is JsonElement element)
-            {
-                fixedData[kvp.Key] = element.ValueKind switch
-                {
-                    JsonValueKind.Number => element.GetInt32(),
-                    JsonValueKind.String => element.GetString(),
-                    JsonValueKind.True => true,
-                    JsonValueKind.False => false,
-                    _ => kvp.Value
-                };
-            }
-            else
-            {
-                fixedData[kvp.Key] = kvp.Value;
-            }
-        }
-        snapshot.DomainData = fixedData;
     }
 
     static MachineDefinition BuildWorkflowDefinition()
