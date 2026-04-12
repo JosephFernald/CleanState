@@ -18,7 +18,8 @@
 </p>
 
 <p align="center">
-  <a href="https://josephfernald.github.io/CleanState/"><strong>Documentation</strong></a>
+  <a href="https://josephfernald.github.io/CleanState/"><strong>Documentation</strong></a> &nbsp;|&nbsp;
+  <a href="QA.md"><strong>Q&A</strong></a>
 </p>
 
 ---
