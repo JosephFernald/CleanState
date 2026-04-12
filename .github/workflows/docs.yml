@@ -37,11 +37,15 @@ jobs:
       - name: Install DocFX
         run: dotnet tool install docfx -g
 
-      - name: Build documentation
+      - name: Generate API metadata
         run: |
           cd docfx_project
-          docfx metadata docfx.json
-          docfx build docfx.json
+          docfx metadata docfx.json --log verbose
+
+      - name: Build documentation site
+        run: |
+          cd docfx_project
+          docfx build docfx.json --log verbose
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
