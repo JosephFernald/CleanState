@@ -115,6 +115,42 @@ namespace CleanState.Builder
         }
 
         /// <summary>
+        /// Add a step that blocks until ALL specified conditions are satisfied.
+        /// </summary>
+        public StateBuilder WaitForAll(
+            Action<WaitConditionBuilder> configure,
+            string label = null,
+            [CallerFilePath] string file = null,
+            [CallerLineNumber] int line = 0)
+        {
+            if (configure == null) throw new ArgumentNullException(nameof(configure));
+            var builder = new WaitConditionBuilder();
+            configure(builder);
+            if (builder.Conditions.Count == 0)
+                throw new InvalidOperationException("WaitForAll requires at least one condition.");
+            Steps.Add(new PendingStep(PendingStepKind.WaitForAll, label ?? "WaitForAll", sourceFile: file, sourceLine: line, conditionBuilder: builder));
+            return this;
+        }
+
+        /// <summary>
+        /// Add a step that blocks until ANY of the specified conditions is satisfied.
+        /// </summary>
+        public StateBuilder WaitForAny(
+            Action<WaitConditionBuilder> configure,
+            string label = null,
+            [CallerFilePath] string file = null,
+            [CallerLineNumber] int line = 0)
+        {
+            if (configure == null) throw new ArgumentNullException(nameof(configure));
+            var builder = new WaitConditionBuilder();
+            configure(builder);
+            if (builder.Conditions.Count == 0)
+                throw new InvalidOperationException("WaitForAny requires at least one condition.");
+            Steps.Add(new PendingStep(PendingStepKind.WaitForAny, label ?? "WaitForAny", sourceFile: file, sourceLine: line, conditionBuilder: builder));
+            return this;
+        }
+
+        /// <summary>
         /// Begin a decision block with conditional branches.
         /// </summary>
         public DecisionBuilder Decision(
@@ -150,7 +186,9 @@ namespace CleanState.Builder
             WaitForTime,
             WaitForPredicate,
             GoTo,
-            DecisionPlaceholder
+            DecisionPlaceholder,
+            WaitForAll,
+            WaitForAny
         }
 
         internal readonly struct PendingStep
@@ -164,6 +202,7 @@ namespace CleanState.Builder
             public readonly double Duration;
             public readonly string SourceFile;
             public readonly int SourceLine;
+            public readonly WaitConditionBuilder ConditionBuilder;
 
             public PendingStep(
                 PendingStepKind kind,
@@ -174,7 +213,8 @@ namespace CleanState.Builder
                 string eventName = null,
                 string targetState = null,
                 double duration = 0.0,
-                Func<MachineContext, bool> predicate = null)
+                Func<MachineContext, bool> predicate = null,
+                WaitConditionBuilder conditionBuilder = null)
             {
                 Kind = kind;
                 Label = label;
@@ -185,6 +225,7 @@ namespace CleanState.Builder
                 Duration = duration;
                 SourceFile = sourceFile;
                 SourceLine = sourceLine;
+                ConditionBuilder = conditionBuilder;
             }
         }
 

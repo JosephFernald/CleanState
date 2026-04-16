@@ -96,6 +96,14 @@ namespace CleanState.Runtime
                 Status = MachineStatus.Running;
                 RunUntilBlocked(currentTime);
             }
+            else if (Status == MachineStatus.Blocked && _blockKind == BlockKind.WaitForComposite)
+            {
+                // Composite steps may contain event sub-conditions — deliver and re-evaluate
+                _context.LastReceivedEvent = eventId;
+                _context.CurrentTime = currentTime;
+                Status = MachineStatus.Running;
+                RunUntilBlocked(currentTime);
+            }
         }
 
         /// <summary>
@@ -118,6 +126,9 @@ namespace CleanState.Runtime
                     break;
                 case BlockKind.WaitForPredicate:
                     canResume = true; // re-evaluate the step
+                    break;
+                case BlockKind.WaitForComposite:
+                    canResume = true; // composite steps may contain time/predicate sub-conditions
                     break;
                 default:
                     return; // event-blocked machines only resume via SendEvent

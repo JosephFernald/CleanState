@@ -28,7 +28,9 @@ namespace CleanState.Steps
         /// <summary>Waiting until a predicate evaluates to true.</summary>
         WaitForPredicate,
         /// <summary>Waiting for a child machine to complete.</summary>
-        WaitForChildMachine
+        WaitForChildMachine,
+        /// <summary>Waiting for a composite condition (WaitForAll / WaitForAny).</summary>
+        WaitForComposite
     }
 
     /// <summary>
@@ -74,5 +76,8 @@ namespace CleanState.Steps
 
         /// <summary>Creates a result that blocks until a child machine completes.</summary>
         public static StepResult WaitForChild() => new StepResult(StepResultKind.Block, StateId.Invalid, BlockKind.WaitForChildMachine, EventId.Invalid, 0f);
+
+        /// <summary>Creates a result that blocks until a composite condition is satisfied (WaitForAll / WaitForAny).</summary>
+        public static StepResult WaitForComposite() => new StepResult(StepResultKind.Block, StateId.Invalid, BlockKind.WaitForComposite, EventId.Invalid, 0f);
     }
 }

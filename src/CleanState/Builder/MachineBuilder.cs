@@ -97,6 +97,24 @@ namespace CleanState.Builder
                             nameLookup.RegisterEvent(eid, step.EventName);
                         }
                     }
+                    // Also collect events from composite conditions
+                    if ((step.Kind == StateBuilder.PendingStepKind.WaitForAll ||
+                         step.Kind == StateBuilder.PendingStepKind.WaitForAny) &&
+                        step.ConditionBuilder != null)
+                    {
+                        foreach (var cond in step.ConditionBuilder.Conditions)
+                        {
+                            if (cond.Kind == WaitConditionBuilder.PendingConditionKind.Event && cond.EventName != null)
+                            {
+                                if (!eventNameToId.ContainsKey(cond.EventName))
+                                {
+                                    var eid = new EventId(nextEventId++);
+                                    eventNameToId[cond.EventName] = eid;
+                                    nameLookup.RegisterEvent(eid, cond.EventName);
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -128,15 +146,60 @@ namespace CleanState.Builder
                 var state = definition.GetStateByIndex(i);
                 for (int j = 0; j < state.Steps.Length; j++)
                 {
-                    if (state.Steps[j] is WaitForEventStep waitStep)
+                    var step = state.Steps[j];
+                    if (step is WaitForEventStep waitStep)
                     {
                         var name = definition.NameLookup.GetEventName(waitStep.EventId);
                         if (name == eventName)
                             return waitStep.EventId;
                     }
+
+                    // Also search inside composite steps
+                    CompositeCondition[] conditions = null;
+                    if (step is WaitForAllStep allStep)
+                        conditions = allStep.Conditions;
+                    else if (step is WaitForAnyStep anyStep)
+                        conditions = anyStep.Conditions;
+
+                    if (conditions != null)
+                    {
+                        for (int c = 0; c < conditions.Length; c++)
+                        {
+                            if (conditions[c].Kind == CompositeConditionKind.Event)
+                            {
+                                var name = definition.NameLookup.GetEventName(conditions[c].EventId);
+                                if (name == eventName)
+                                    return conditions[c].EventId;
+                            }
+                        }
+                    }
                 }
             }
             throw new ArgumentException($"Event '{eventName}' not found in machine definition '{definition.Name}'.");
+        }
+
+        private static CompositeCondition[] CompileConditions(
+            WaitConditionBuilder conditionBuilder,
+            Dictionary<string, EventId> eventNameToId)
+        {
+            var conditions = new CompositeCondition[conditionBuilder.Conditions.Count];
+            for (int i = 0; i < conditionBuilder.Conditions.Count; i++)
+            {
+                var pc = conditionBuilder.Conditions[i];
+                switch (pc.Kind)
+                {
+                    case WaitConditionBuilder.PendingConditionKind.Event:
+                        conditions[i] = CompositeCondition.ForEvent(eventNameToId[pc.EventName]);
+                        break;
+                    case WaitConditionBuilder.PendingConditionKind.Time:
+                        conditions[i] = CompositeCondition.ForTime(pc.Duration);
+                        break;
+                    case WaitConditionBuilder.PendingConditionKind.Predicate:
+                        conditions[i] = CompositeCondition.ForPredicate(pc.Predicate);
+                        break;
+                }
+            }
+            return conditions;
         }
 
         private IStep[] CompileSteps(
@@ -180,6 +243,18 @@ namespace CleanState.Builder
                             throw new InvalidOperationException(
                                 $"GoTo target state '{pending.TargetState}' not found in machine '{_machineName}'.");
                         compiled.Add(new TransitionStep(targetId, debugInfo));
+                        break;
+
+                    case StateBuilder.PendingStepKind.WaitForAll:
+                        compiled.Add(new WaitForAllStep(
+                            CompileConditions(pending.ConditionBuilder, eventNameToId),
+                            debugInfo));
+                        break;
+
+                    case StateBuilder.PendingStepKind.WaitForAny:
+                        compiled.Add(new WaitForAnyStep(
+                            CompileConditions(pending.ConditionBuilder, eventNameToId),
+                            debugInfo));
                         break;
 
                     case StateBuilder.PendingStepKind.DecisionPlaceholder:
