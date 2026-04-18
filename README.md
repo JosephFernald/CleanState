@@ -782,6 +782,9 @@ Each sample highlights a specific problem CleanState solves.
 - [x] Child / sub-state machines
 - [ ] Advanced debug inspector UI
 - [ ] Data-oriented runtime optimization
+- [ ] Any-State / Interrupt transitions — Unity Animator-style "Any" transitions that restore the prior state when cleared (e.g. a `Tilt` state triggered from anywhere, then resume where you were). Two candidate designs; pick after real usage clarifies the need:
+  - **Option A — Single-level interrupt.** Add `.AnyState(eventName, targetState)` on `MachineBuilder` to register global event→state rules. `Machine.SendEvent` checks these rules first; on match, save `currentState` into a single `_interruptedFrom` slot and force-transition. A new `.ClearInterrupt()` step (or `StateBuilder.RestoreAfterInterrupt()`) force-transitions back to the saved state and clears the slot. Snapshot adds one optional field. Simple, covers the Unity Animator case exactly. Ambiguity: what happens when an interrupt fires while already interrupted — replace, ignore, or fault? (lean: ignore, matches "you're already handling it")
+  - **Option B — Stacked interrupts.** Same registration API, but `Machine` maintains a stack of `(stateName, stepIndex)` frames. Push on entry, pop on clear. Supports nested interrupts (Tilt-during-Tilt, interrupt-during-cutscene). Requires: stack-depth cap + fault on overflow, `MachineSnapshot` serializes the full stack, `IFsmObservable` exposes stack depth, debugger renders the stack, decision on whether queued events flush/drop on push. Strictly a superset of A — Option A is Option B with `maxDepth = 1`.
 
 ---
 
