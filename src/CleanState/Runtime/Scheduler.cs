@@ -40,6 +40,7 @@ namespace CleanState.Runtime
         {
             var id = new MachineId(_nextMachineId++);
             var machine = new Machine(id, definition, traceBuffer);
+            machine.Context.Scheduler = this;
             _machines.Add(machine);
             _machineById[id.Value] = machine;
             return machine;

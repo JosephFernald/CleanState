@@ -130,6 +130,9 @@ namespace CleanState.Runtime
                 case BlockKind.WaitForComposite:
                     canResume = true; // composite steps may contain time/predicate sub-conditions
                     break;
+                case BlockKind.WaitForChildMachine:
+                    canResume = true; // re-evaluate to check if child completed
+                    break;
                 default:
                     return; // event-blocked machines only resume via SendEvent
             }

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using CleanState.Debug;
+using CleanState.Runtime;
 using CleanState.Steps;
 
 namespace CleanState.Builder
@@ -115,6 +116,32 @@ namespace CleanState.Builder
         }
 
         /// <summary>
+        /// Add a step that spawns a child machine and blocks until it completes.
+        /// </summary>
+        /// <param name="childDefinition">A pre-built MachineDefinition for the child.</param>
+        /// <param name="label">Human-readable label for this step.</param>
+        /// <param name="childInit">Optional callback to initialize the child's context before it starts.</param>
+        /// <param name="file">Auto-captured source file.</param>
+        /// <param name="line">Auto-captured source line.</param>
+        public StateBuilder RunChild(
+            MachineDefinition childDefinition,
+            string label = null,
+            Action<MachineContext> childInit = null,
+            [CallerFilePath] string file = null,
+            [CallerLineNumber] int line = 0)
+        {
+            if (childDefinition == null) throw new ArgumentNullException(nameof(childDefinition));
+            Steps.Add(new PendingStep(
+                PendingStepKind.RunChild,
+                label ?? $"RunChild({childDefinition.Name})",
+                sourceFile: file,
+                sourceLine: line,
+                childDefinition: childDefinition,
+                childInit: childInit));
+            return this;
+        }
+
+        /// <summary>
         /// Add a step that blocks until ALL specified conditions are satisfied.
         /// </summary>
         public StateBuilder WaitForAll(
@@ -188,7 +215,8 @@ namespace CleanState.Builder
             GoTo,
             DecisionPlaceholder,
             WaitForAll,
-            WaitForAny
+            WaitForAny,
+            RunChild
         }
 
         internal readonly struct PendingStep
@@ -203,6 +231,8 @@ namespace CleanState.Builder
             public readonly string SourceFile;
             public readonly int SourceLine;
             public readonly WaitConditionBuilder ConditionBuilder;
+            public readonly MachineDefinition ChildDefinition;
+            public readonly Action<MachineContext> ChildInit;
 
             public PendingStep(
                 PendingStepKind kind,
@@ -214,7 +244,9 @@ namespace CleanState.Builder
                 string targetState = null,
                 double duration = 0.0,
                 Func<MachineContext, bool> predicate = null,
-                WaitConditionBuilder conditionBuilder = null)
+                WaitConditionBuilder conditionBuilder = null,
+                MachineDefinition childDefinition = null,
+                Action<MachineContext> childInit = null)
             {
                 Kind = kind;
                 Label = label;
@@ -226,6 +258,8 @@ namespace CleanState.Builder
                 SourceFile = sourceFile;
                 SourceLine = sourceLine;
                 ConditionBuilder = conditionBuilder;
+                ChildDefinition = childDefinition;
+                ChildInit = childInit;
             }
         }
 

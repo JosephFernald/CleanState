@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
 using CleanState.Identity;
+using CleanState.Runtime;
 
 namespace CleanState.Steps
 {
@@ -17,6 +18,9 @@ namespace CleanState.Steps
         public EventId LastReceivedEvent { get; internal set; } = EventId.Invalid;
         /// <summary>The state the machine is currently in.</summary>
         public StateId CurrentState { get; internal set; }
+
+        /// <summary>The scheduler managing this machine. Set internally by the runtime.</summary>
+        internal Scheduler Scheduler { get; set; }
 
         /// <summary>
         /// Shared blackboard for domain data. Keyed by string for flexibility,

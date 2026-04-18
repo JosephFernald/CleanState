@@ -13,7 +13,7 @@
   <img src="https://img.shields.io/badge/license-MIT-green.svg"/>
   <img src="https://img.shields.io/badge/unity-6000.0%2B-blue.svg"/>
   <img src="https://img.shields.io/badge/core-netstandard2.0-purple.svg"/>
-  <img src="https://img.shields.io/badge/tests-102%20passing%20%E2%9C%94-brightgreen.svg"/>
+  <img src="https://img.shields.io/badge/tests-119%20passing%20%E2%9C%94-brightgreen.svg"/>
   <img src="https://img.shields.io/badge/status-active-brightgreen.svg"/>
 </p>
 
@@ -167,6 +167,27 @@ var definition = new MachineBuilder("PickGame")
         .Otherwise("Scrubbed", "Failed")
 ```
 
+### Child / sub-state machines (RunChild)
+
+```csharp
+// Build child definition independently
+var validationDef = new MachineBuilder("Validation")
+    .State("Check")
+        .Then(ctx => Validate(ctx), "RunValidation")
+        .WaitForEvent("ValidationDone", "AwaitResult")
+    .Build();
+
+// Parent spawns and waits for child
+var pipelineDef = new MachineBuilder("Pipeline")
+    .State("Validate")
+        .RunChild(validationDef, "RunValidation",
+            childInit: ctx => ctx.Set("docId", "DOC-123"))
+        .GoTo("Process")
+    .State("Process")
+        .Then(ctx => Process(ctx), "DoWork")
+    .Build();
+```
+
 ### Run it (standalone)
 
 ```csharp
@@ -211,6 +232,7 @@ A machine executes steps sequentially in a single call until it hits a blocking 
 | WaitForPredicate | Predicate returns true |
 | WaitForChild | Child machine completes |
 | WaitForComposite | All (WaitForAll) or any (WaitForAny) sub-conditions satisfied |
+| WaitForChild | Child machine completes (via `RunChild`) |
 
 The scheduler calls `Update(currentTime)` each frame. Only blocked machines with satisfiable conditions are ticked — idle machines cost nothing.
 
@@ -461,8 +483,8 @@ src/CleanState/                     Core library (netstandard2.0)
   Steps/                            IStep, ActionStep, WaitForEventStep,
                                     WaitForTimeStep, WaitForPredicateStep,
                                     WaitForAllStep, WaitForAnyStep,
-                                    CompositeCondition, DecisionStep,
-                                    TransitionStep, MachineContext
+                                    CompositeCondition, RunChildStep,
+                                    DecisionStep, TransitionStep, MachineContext
   Runtime/                          Machine, MachineDefinition, StateDefinition,
                                     Scheduler, EventQueue, IFsmObservable
   Builder/                          MachineBuilder, StateBuilder, DecisionBuilder,
@@ -472,7 +494,7 @@ src/CleanState/                     Core library (netstandard2.0)
                                     FsmDebugController, FsmBreakpoint
   Recovery/                         MachineSnapshot, MachineRecovery, CheckpointId
 
-tests/CleanState.Tests/             102 tests (net8.0, NUnit)
+tests/CleanState.Tests/             119 tests (net8.0, NUnit)
 
 unity/CleanState.Unity/             Unity package (optional)
   Runtime/                          FsmRunner, FsmDebugRegistry, MachineExtensions
@@ -504,20 +526,21 @@ dotnet test tests/CleanState.Tests/CleanState.Tests.csproj
 
 ## 🧪 Test Coverage
 
-> Fully tested core — **102 tests** across execution, recovery, debugging, composite waits, and architectural boundaries.
+> Fully tested core — **119 tests** across execution, recovery, debugging, composite waits, child machines, and architectural boundaries.
 
 | Suite | Count | Coverage |
 |---|---:|---|
 | MachineBuilderTests | 6 | Build validation, error cases |
 | MachineExecutionTests | 8 | Actions, transitions, events, time, predicates, decisions |
 | CompositeWaitTests | 20 | WaitForAll / WaitForAny with events, time, predicates, mixed conditions |
+| ChildMachineTests | 17 | RunChild lifecycle, init, faults, cleanup, nesting, definition reuse |
 | SchedulerTests | 3 | Broadcast events, lifecycle, targeted delivery |
 | RecoveryTests | 3 | Snapshot capture / restore |
 | ObservationBoundaryTests | 16 | IFsmObservable enforces read-only surface |
 | SourceOfTruthTests | 12 | Definition integrity, no Unity serialization in core |
 | DebugFeatureTests | 21 | Breakpoints, enriched snapshots, trace buffer, step visibility |
 | PerformanceTests | 13 | Allocation profiling, throughput benchmarks |
-| **Total** | **102** | |
+| **Total** | **119** | |
 
 ---
 
@@ -666,6 +689,27 @@ Proves CleanState can model simultaneous concerns by composing machines, not by 
 
 ---
 
+### 📦 Order Pipeline (Child / Sub-State Machines)
+
+A three-phase order processing pipeline where each phase is a child machine.
+
+**Demonstrates:**
+
+- `RunChild` — parent spawns a child machine and blocks until it completes
+- `childInit` callback — parent passes order data into each child's context
+- Three independent child definitions (Validation, Payment, Fulfillment) each with 3 states
+- Parent pipeline orchestrates all three sequentially with zero knowledge of child internals
+- Children use time waits to simulate real async work (inventory lookup, payment gateway, warehouse picking)
+- Child definitions are independently built and reusable
+
+**Why it matters:**
+
+Complex workflows decompose into sub-workflows. Without child machines, the parent must flatten every sub-step into its own state — creating a monolithic 9+ state machine. With `RunChild`, the parent has 5 clean states and each child is testable in isolation.
+
+👉 **See:** [`samples/OrderPipeline`](samples/OrderPipeline/README.md)
+
+---
+
 ### 🚀 Mission Control (WaitForAll / WaitForAny)
 
 A rocket launch sequence demonstrating composite wait blocks.
@@ -681,7 +725,7 @@ A rocket launch sequence demonstrating composite wait blocks.
 
 Real systems often need to wait for multiple conditions simultaneously (all sensors ready) or race between outcomes (success vs. timeout). Composite waits express this directly instead of requiring workaround states.
 
-👉 **See:** [`samples/MissionControl`](samples/MissionControl)
+👉 **See:** [`samples/MissionControl`](samples/MissionControl/README.md)
 
 ---
 
@@ -722,10 +766,11 @@ dotnet run --project samples/CompositeRegions/CompositeRegions.csproj
 dotnet run --project samples/StateRegionsPlayer/StateRegionsPlayer.csproj
 dotnet run --project samples/UnityNpcAI/UnityNpcAI.csproj
 dotnet run --project samples/MissionControl/MissionControl.csproj
+dotnet run --project samples/OrderPipeline/OrderPipeline.csproj
 ```
 
 Each sample highlights a specific problem CleanState solves.
-**If you're new, start with PickGame. For Unity integration, see UnityNpcAI. For composite waits, see MissionControl.**
+**If you're new, start with PickGame. For Unity integration, see UnityNpcAI. For child machines, see OrderPipeline.**
 
 ---
 
@@ -734,7 +779,7 @@ Each sample highlights a specific problem CleanState solves.
 - [x] Snapshot serialization helpers (`SnapshotSerializer` with JSON round-trip support)
 - [x] Parallel machine execution model (`CompositeStateMachine`, sidecar pattern)
 - [x] WaitForAll / WaitForAny composite blocks
-- [ ] Child / sub-state machines
+- [x] Child / sub-state machines
 - [ ] Advanced debug inspector UI
 - [ ] Data-oriented runtime optimization
 

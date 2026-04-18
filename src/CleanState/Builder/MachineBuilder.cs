@@ -257,6 +257,10 @@ namespace CleanState.Builder
                             debugInfo));
                         break;
 
+                    case StateBuilder.PendingStepKind.RunChild:
+                        compiled.Add(new RunChildStep(pending.ChildDefinition, debugInfo, pending.ChildInit));
+                        break;
+
                     case StateBuilder.PendingStepKind.DecisionPlaceholder:
                         if (decisionIndex >= sb.Decisions.Count)
                             throw new InvalidOperationException(
